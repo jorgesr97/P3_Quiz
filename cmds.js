@@ -155,8 +155,6 @@ exports.playCmd = rl => {
             .then(() => {
                 if (toBeResolved.length <= 0) {
                     log('No hay nada más que preguntar.');
-                    log(`Fin del juego. Aciertos: ${score}`);
-                    biglog(`${score}`, 'magenta');
                     return;
                 } else {
                     let id = Math.floor(Math.random() * toBeResolved.length);
@@ -170,7 +168,6 @@ exports.playCmd = rl => {
                                 return playOne();
                             } else {
                                 log("INCORRECTO.");
-                                log(`Fin del juego. Aciertos: ${score}`);
                             }
 
                         })
@@ -191,6 +188,8 @@ exports.playCmd = rl => {
             log(`Error: ${e}`);
         })
         .then(() => {
+            log(`Fin del juego. Aciertos: ${score}`);
+            biglog(`${score}`, 'magenta');
             rl.prompt();
         })
 };
