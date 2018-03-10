@@ -156,22 +156,21 @@ exports.playCmd = rl => {
                 if (toBeResolved.length <= 0) {
                     log('No hay nada más que preguntar.');
                     return;
-                } else {
-                    let id = Math.floor(Math.random() * toBeResolved.length);
-                    let quiz = toBeResolved[id];
-                    toBeResolved.splice(id, 1);
-                    return makeQuestion(rl, `${quiz.question} `)
-                        .then(answer => {
-                            if ((answer.trim()).toLowerCase() === (quiz.answer).toLowerCase()) {
-                                score++;
-                                log(`CORRECTO - Lleva ${score} aciertos.`);
-                                return playOne();
-                            } else {
-                                log("INCORRECTO.");
-                            }
-
-                        })
                 }
+                let id = Math.floor(Math.random() * toBeResolved.length);
+                let quiz = toBeResolved[id];
+                toBeResolved.splice(id, 1);
+
+                return makeQuestion(rl, `${quiz.question} `)
+                    .then(answer => {
+                        if ((answer.trim()).toLowerCase() === ((quiz.answer).trim()).toLowerCase()) {
+                            score++;
+                            log(`CORRECTO - Lleva ${score} aciertos.`);
+                            return playOne();
+                        } else {
+                            log("INCORRECTO.");
+                        }
+                    })
             })
     };
 
@@ -183,7 +182,6 @@ exports.playCmd = rl => {
         .then(() => {
             return playOne();
         })
-
         .catch(e => {
             log(`Error: ${e}`);
         })
