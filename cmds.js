@@ -144,69 +144,55 @@ exports.testCmd = (rl,id) => {
 exports.playCmd = rl => {
 
     let score = 0;
-    let i = 0;
     let toBeResolved = [];
-    models.quiz.findAll()
-        .each((id) => {
-            toBeResolved[(id - 1)] = id;
+    models.quiz.findAll({raw:true})
+        .then(quizzes =>{
+            toBeResolved=quizzes;
         });
 
     const playOne = () => {
-
-        if (toBeResolved.length==0) {
-            log('No hay nada más que preguntar.');
-            log(`Fin del juego. Aciertos: ${score}`);
-            biglog(`${score}`, 'magenta');
-            rl.prompt();
-        } else
-        {
-            let id= Math.floor((Math.random()*toBeResolved.length)+1);
-            let id_aux= toBeResolved[id];
-            toBeResolved.splice(id,1);
-            validateId(id)
-                .then(id => models.quiz.findById(id))
-                .then(quiz => {
-                    if (!quiz) {
-                        throw new Error(`No existe un quiz asociado al id=${id}.`);
-                    }
-                    makeQuestion(rl, `${quiz.question}? `)
-                        .then(a => {
-                            if ((a.trim()).toLowerCase() === (quiz.answer).toLowerCase()) {
+        return Promise.resolve()
+            .then(() => {
+                if (toBeResolved.length <= 0) {
+                    log('No hay nada más que preguntar.');
+                    log(`Fin del juego. Aciertos: ${score}`);
+                    biglog(`${score}`, 'magenta');
+                    return;
+                } else {
+                    let id = Math.floor(Math.random() * toBeResolved.length);
+                    let quiz = toBeResolved[id];
+                    toBeResolved.splice(id, 1);
+                    return makeQuestion(rl, `${quiz.question} `)
+                        .then(answer => {
+                            if ((answer.trim()).toLowerCase() === (quiz.answer).toLowerCase()) {
                                 score++;
                                 log(`CORRECTO - Lleva ${score} aciertos.`);
-                                playOne();
-                            }
-
-                            else {
+                                return playOne();
+                            } else {
                                 log("INCORRECTO.");
                                 log(`Fin del juego. Aciertos: ${score}`);
-                                rl.prompt();
                             }
-                        });
-                })
-                .catch(error => {
-                    errorlog(error.message);
-                });
-            //const quiz=model.getByIndex(id_aux);
 
-
-            //rl.question(colorize(`${quiz.question}? `, 'red'), answer => {
-
-            //if ((answer.trim()).toLowerCase() === (quiz.answer).toLowerCase()){
-                    //score++;
-                    //log(`CORRECTO - Lleva ${score} aciertos.`);
-                    //playOne();
-                //} else{
-                    //log("INCORRECTO.")
-                    //log(`Fin del juego. Aciertos: ${score}`);
-                    //rl.prompt();
-                //}
-
-            //});
-        }
+                        })
+                }
+            })
     };
-    playOne();
 
+    models.quiz.findAll({raw:true})
+        .then(quizzes => {
+            toBeResolved=quizzes;
+        })
+
+        .then(() => {
+            return playOne();
+        })
+
+        .catch(e => {
+            log(`Error: ${e}`);
+        })
+        .then(() => {
+            rl.prompt();
+        })
 };
 
 exports.deleteCmd = (rl,id) => {
