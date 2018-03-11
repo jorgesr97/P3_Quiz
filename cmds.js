@@ -154,7 +154,6 @@ exports.playCmd = rl => {
         return Promise.resolve()
             .then(() => {
                 if (toBeResolved.length <= 0) {
-                    log('No hay nada más que preguntar.');
                     return;
                 }
                 let id = Math.floor(Math.random() * toBeResolved.length);
@@ -165,7 +164,7 @@ exports.playCmd = rl => {
                     .then(answer => {
                         if ((answer.trim()).toLowerCase() === ((quiz.answer).trim()).toLowerCase()) {
                             score++;
-                            log(`CORRECTO - Lleva ${score} aciertos.`);
+                            log(`CORRECTO - Lleva ${score}`);
                             return playOne();
                         } else {
                             log("INCORRECTO.");
@@ -186,7 +185,7 @@ exports.playCmd = rl => {
             log(`Error: ${e}`);
         })
         .then(() => {
-            log(`Fin del juego. Aciertos: ${score}`);
+            log('Fin');
             rl.prompt();
         })
 };
