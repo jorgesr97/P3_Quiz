@@ -154,7 +154,8 @@ exports.playCmd = rl => {
         return Promise.resolve()
             .then(() => {
                 if (toBeResolved.length <= 0) {
-                    log(' Fin. No hay nada más que preguntar.');
+                    log('No hay nada más que preguntar.');
+                    log(`Fin del juego. Aciertos: ${score}`);
                     return rl.prompt();
                 }
                 let id = Math.floor(Math.random() * toBeResolved.length);
@@ -165,16 +166,16 @@ exports.playCmd = rl => {
                     .then(answer => {
                         if ((answer.trim()).toLowerCase() === ((quiz.answer).trim()).toLowerCase()) {
                             score++;
-                            log(`CORRECTO - Lleva ${score}`);
+                            log(`CORRECTO - Lleva ${score} aciertos.`);
                             return playOne();
                         } else {
-                            log("Fin. INCORRECTO.");
+                            log("INCORRECTO.");
+                            log(`Fin del juego. Aciertos: ${score}`);
                             return rl.prompt();
                         }
                     })
             })
     };
-
     models.quiz.findAll({raw:true})
         .then(quizzes => {
             toBeResolved=quizzes;
