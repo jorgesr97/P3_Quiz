@@ -187,7 +187,6 @@ exports.playCmd = rl => {
         })
         .then(() => {
             log(`Fin del juego. Aciertos: ${score}`);
-            log(`${score}`, 'magenta');
             rl.prompt();
         })
 };
