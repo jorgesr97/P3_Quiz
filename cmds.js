@@ -169,7 +169,7 @@ exports.playCmd = rl => {
                             return playOne();
                         } else {
                             log("Fin. INCORRECTO.");
-                            rl.prompt();
+                            return rl.prompt();
                         }
                     })
             })
@@ -185,9 +185,6 @@ exports.playCmd = rl => {
         })
         .catch(e => {
             log(`Error: ${e}`);
-        })
-        .then(() => {
-            rl.prompt();
         })
 };
 
