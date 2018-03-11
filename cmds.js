@@ -138,6 +138,7 @@ exports.testCmd = (rl,id) => {
         })
         .catch(error => {
             errorlog(error.message);
+            rl.prompt();
         });
 };
 
